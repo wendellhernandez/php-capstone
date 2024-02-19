@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS `php_capstone_db`.`users` (
 CREATE TABLE IF NOT EXISTS `php_capstone_db`.`categories` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `name` VARCHAR(45) NOT NULL,
+  `image_link` VARCHAR(45) NOT NULL,
   `created_at` DATETIME NOT NULL  DEFAULT current_timestamp,
   `updated_at` DATETIME NOT NULL  DEFAULT current_timestamp,
   PRIMARY KEY (`id`));
