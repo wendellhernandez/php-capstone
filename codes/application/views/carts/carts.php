@@ -14,10 +14,12 @@
         <script src="/assets/js/vendor/bootstrap-select.min.js"></script>
         <link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css">
         <link rel="stylesheet" href="/assets/css/vendor/bootstrap-select.min.css">
+        <script src="https://js.stripe.com/v2/"></script>
 
         <link rel="stylesheet" href="/assets/css/custom/global.css">
         <link rel="stylesheet" href="/assets/css/custom/cart.css">
         <script src="/assets/js/global/cart.js"></script>
+        <script src="/assets/js/global/checkout.js"></script>
     </head>
     <body>
         <div class="wrapper">
@@ -32,132 +34,104 @@
                 <section>
                     <form class="cart_items_form">
                     </form>
-                    <form class="checkout_form">
+                    <form class="checkout_form" action="/shipping_informations/add_shipping_info" method="post">
+<?php
+    if($this->session->flashdata('success')){
+?>
+                        <div class="alert alert-success text-center">
+                            <p><?= $this->session->flashdata('success') ?></p>
+                        </div>
+<?php
+    }
+?>
                         <h3>Shipping Information</h3>
                         <ul>
                             <li>
-                                <input type="text" name="first_name" required>
+                                <input type="text" name="first_name" value="<?= $shipping_information['first_name'] ?>">
                                 <label>First Name</label>
+						        <div id="first_name" class="validation_error"></div>
                             </li>
                             <li>
-                                <input type="text" name="last_name" required>
+                                <input type="text" name="last_name" value="<?= $shipping_information['last_name'] ?>">
                                 <label>Last Name</label>
+						        <div id="last_name" class="validation_error"></div>
                             </li>
                             <li>
-                                <input type="text" name="address_1" required>
+                                <input type="text" name="address_1" value="<?= $shipping_information['address_1'] ?>">
                                 <label>Address 1</label>
+						        <div id="address_1" class="validation_error"></div>
                             </li>
                             <li>
-                                <input type="text" name="address_2" required>
+                                <input type="text" name="address_2" value="<?= $shipping_information['address_2'] ?>">
                                 <label>Address 2</label>
+						        <div id=""address_2" class="validation_error"></div>
                             </li>
                             <li>
-                                <input type="text" name="city" required>
+                                <input type="text" name="city" value="<?= $shipping_information['city'] ?>">
                                 <label>City</label>
+						        <div id="city" class="validation_error"></div>
                             </li>
                             <li>
-                                <input type="text" name="state" required>
+                                <input type="text" name="state" value="<?= $shipping_information['state'] ?>">
                                 <label>State</label>
+						        <div id="state" class="validation_error"></div>
                             </li>
                             <li>
-                                <input type="text" name="zip_code" required>
+                                <input type="text" name="zip" value="<?= $shipping_information['zip'] ?>">
                                 <label>Zip Code</label>
+						        <div id="zip" class="validation_error"></div>
                             </li>
                         </ul>
                         <h3>Order Summary</h3>
-                        <h4>Items <span>$ 40</span></h4>
-                        <h4>Shipping Fee <span>$ 5</span></h4>
-                        <h4 class="total_amount">Total Amount <span>$ 45</span></h4>
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#card_details_modal">Proceed to Checkout</button>
+                        <h4>Items <span class="total_cart_amount"></span></h4>
+                        <h4>Shipping Fee <span class="shipping_fee"></span></h4>
+                        <h4 class="total_amount">Total Amount <span class="total_plus_shipping"></span></h4>
+<?php
+    if(!empty($total_plus_shipping)){
+?>
+                        <button type="submit" class="checkout_form_button">Proceed to Checkout</button>
+<?php
+    }
+?>
+                        
                     </form>
                 </section>
             </section>
-            <!-- Button trigger modal -->
-            <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#card_details_modal">
-                Launch demo modal
-            </button> -->
-            <div class="modal fade form_modal" id="card_details_modal" tabindex="-1" aria-hidden="true">
+            
+            <div class="form_modal" id="card_details_modal" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <button data-dismiss="modal" aria-label="Close" class="close_modal"></button>
-                        <form action="process.php" method="post">
+                        <form role="form" action="/handleStripePayment" method="post"
+                        class="pay_form" data-cc-on-file="false"
+                        data-stripe-publishable-key="<?php echo $this->config->item('stripe_key') ?>">
                             <h2>Card Details</h2>
                             <ul>
                                 <li>
-                                    <input type="text" name="card_name" required>
+                                    <input type="text" name="card_name" placeholder="Test" value="Test">
                                     <label>Card Name</label>
                                 </li>
                                 <li>
-                                    <input type="number" name="card_number" required>
+                                    <input type="text" name="card_number" class="card-number" placeholder="4242 4242 4242 4242" value="4242 4242 4242 4242">
                                     <label>Card Number</label>
                                 </li>
                                 <li>
-                                    <input type="month" name="expiration" required>
-                                    <label>Exp Date</label>
+                                    <input type="text" name="card_expiry_month" class="card-expiry-month" placeholder="12" value="12">
+                                    <label>Exp Month</label>
                                 </li>
                                 <li>
-                                    <input type="number" name="cvc" required>
+                                    <input type="text" name="card_expiry_year" class="card-expiry-year" placeholder="2025" value="2025">
+                                    <label>Exp Year</label>
+                                </li>
+                                <li>
+                                    <input type="text" name="cvc" class="card-cvc" placeholder="456" value="456">
                                     <label>CVC</label>
                                 </li>
                             </ul>
-                            <h3>Total Amount <span>$ 45</span></h3>
-                            <button type="button">Pay</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade form_modal" id="login_modal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <button data-dismiss="modal" aria-label="Close" class="close_modal"></button>
-                        <form action="process.php" method="post">
-                            <h2>Login to order.</h2>
-                            <button type="button" class="switch_to_signup">New Member? Register here.</button>
-                            <ul>
-                                <li>
-                                    <input type="text" name="email" required>
-                                    <label>Email</label>
-                                </li>
-                                <li>
-                                    <input type="password" name="password" required>
-                                    <label>Password</label>
-                                </li>
-                            </ul>
-                            <button type="button">Login</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            <div class="modal fade form_modal" id="signup_modal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <button data-dismiss="modal" aria-label="Close" class="close_modal"></button>
-                        <form action="process.php" method="post">
-                            <h2>Signup to order.</h2>
-                            <button type="button" class="switch_to_signup">Already a member? Login here.</button>
-                            <ul>
-                                <li>
-                                    <input type="text" name="email" required>
-                                    <label>Email</label>
-                                </li>
-                                <li>
-                                    <input type="password" name="password" required>
-                                    <label>Password</label>
-                                </li>
-                                <li>
-                                    <input type="password" name="password" required>
-                                    <label>Password</label>
-                                </li>
-                                <li>
-                                    <input type="password" name="password" required>
-                                    <label>Password</label>
-                                </li>
-                                <li>
-                                    <input type="password" name="password" required>
-                                    <label>Password</label>
-                                </li>
-                            </ul>
-                            <button type="button">Signup</button>
+                            <h3>Total Amount <span class="total_plus_shipping"></span></h3>
+                            <div class='error hide'>Error occured while making the payment.</div>
+                            
+                            <button type="sumbit">Pay</button>
                         </form>
                     </div>
                 </div>

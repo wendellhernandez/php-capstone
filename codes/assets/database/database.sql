@@ -3,7 +3,6 @@ USE `php_capstone_db` ;
 
 CREATE TABLE IF NOT EXISTS `php_capstone_db`.`users` (
   `id` INT NOT NULL AUTO_INCREMENT,
-  `shipping_information_id` INT NOT NULL,
   `is_admin` TINYINT NOT NULL  DEFAULT 0,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
@@ -11,12 +10,7 @@ CREATE TABLE IF NOT EXISTS `php_capstone_db`.`users` (
   `password` VARCHAR(255) NOT NULL,
   `created_at` DATETIME NOT NULL  DEFAULT current_timestamp,
   `updated_at` DATETIME NOT NULL  DEFAULT current_timestamp,
-  PRIMARY KEY (`id`),
-  CONSTRAINT `fk_users_shipping_informations1`
-    FOREIGN KEY (`shipping_information_id`)
-    REFERENCES `mydb`.`shipping_informations` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION);
+  PRIMARY KEY (`id`));
 
 CREATE TABLE IF NOT EXISTS `php_capstone_db`.`categories` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -56,11 +50,11 @@ CREATE TABLE IF NOT EXISTS `php_capstone_db`.`products` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION);
 
-INSERT INTO `products` (`id`,`categories_id`,`users_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (1,1,1,'Tomato','very healthy and delicious',1.70,400,0,'','2024-02-18 15:28:58','2024-02-18 15:28:58');
-INSERT INTO `products` (`id`,`categories_id`,`users_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (2,2,1,'Orange','very yummy and sweet',0.60,350,0,'','2024-02-18 15:30:06','2024-02-18 15:30:06');
-INSERT INTO `products` (`id`,`categories_id`,`users_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (3,1,1,'Onion','very smelly',1.20,600,0,'','2024-02-19 11:24:21','2024-02-19 11:24:21');
-INSERT INTO `products` (`id`,`categories_id`,`users_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (4,2,1,'Pineapple','very yellow',0.90,500,0,'','2024-02-19 11:24:21','2024-02-19 11:24:21');
-INSERT INTO `products` (`id`,`categories_id`,`users_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (5,3,1,'Pork Chop','chopping pork',5.30,250,0,'','2024-02-19 11:24:21','2024-02-19 11:24:21');
+INSERT INTO `products` (`id`,`category_id`,`user_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (1,1,1,'Tomato','very healthy and delicious',1.70,400,0,'','2024-02-18 15:28:58','2024-02-18 15:28:58');
+INSERT INTO `products` (`id`,`category_id`,`user_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (2,2,1,'Orange','very yummy and sweet',0.60,350,0,'','2024-02-18 15:30:06','2024-02-18 15:30:06');
+INSERT INTO `products` (`id`,`category_id`,`user_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (3,1,1,'Onion','very smelly',1.20,600,0,'','2024-02-19 11:24:21','2024-02-19 11:24:21');
+INSERT INTO `products` (`id`,`category_id`,`user_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (4,2,1,'Pineapple','very yellow',0.90,500,0,'','2024-02-19 11:24:21','2024-02-19 11:24:21');
+INSERT INTO `products` (`id`,`category_id`,`user_id`,`name`,`description`,`price`,`stocks`,`sold`,`product_image_json`,`created_at`,`updated_at`) VALUES (5,3,1,'Pork Chop','chopping pork',5.30,250,0,'','2024-02-19 11:24:21','2024-02-19 11:24:21');
 
 CREATE TABLE IF NOT EXISTS `php_capstone_db`.`carts` (
   `id` INT NOT NULL AUTO_INCREMENT,
@@ -83,6 +77,7 @@ CREATE TABLE IF NOT EXISTS `php_capstone_db`.`carts` (
 
 CREATE TABLE IF NOT EXISTS `php_capstone_db`.`shipping_informations` (
   `id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
   `first_name` VARCHAR(45) NOT NULL,
   `last_name` VARCHAR(45) NOT NULL,
   `address_1` VARCHAR(100) NOT NULL,
@@ -92,18 +87,23 @@ CREATE TABLE IF NOT EXISTS `php_capstone_db`.`shipping_informations` (
   `zip` VARCHAR(10) NOT NULL,
   `created_at` DATETIME NOT NULL  DEFAULT current_timestamp,
   `updated_at` DATETIME NOT NULL  DEFAULT current_timestamp,
-  PRIMARY KEY (`id`));
+  PRIMARY KEY (`id`),
+  INDEX `fk_shipping_informations_users1_idx` (`user_id` ASC) VISIBLE,
+  CONSTRAINT `fk_shipping_informations_users1`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `mydb`.`users` (`id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION);
 
-CREATE TABLE IF NOT EXISTS `php_capstone_db`.`transactions` (
+CREATE TABLE IF NOT EXISTS `php_capstone_db`.`orders` (
   `id` BIGINT NOT NULL AUTO_INCREMENT,
   `user_id` INT NOT NULL,
-  `quantity` INT(7) NOT NULL,
   `total_amount` DECIMAL(8,2) NOT NULL,
-  `status` VARCHAR(45) NOT NULL,
+  `status` VARCHAR(45) NOT NULL  DEFAULT 'Pending',
   `created_at` DATETIME NOT NULL  DEFAULT current_timestamp,
   `updated_at` DATETIME NOT NULL  DEFAULT current_timestamp,
   PRIMARY KEY (`id`),
-  CONSTRAINT `fk_transactions_users1`
+  CONSTRAINT `fk_orders_users1`
     FOREIGN KEY (`user_id`)
     REFERENCES `php_capstone_db`.`users` (`id`)
     ON DELETE NO ACTION

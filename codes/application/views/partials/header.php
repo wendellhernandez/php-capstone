@@ -4,7 +4,7 @@
 <?php
     if($is_logged_in){
 ?>
-                    <a class="profile_btn" href="/users/profile">Welcome! <?= $first_name ?> <span><i class="fa-solid fa-user"></i></span></a>
+                    <a class="profile_btn" href="/users/profile">Welcome! <?= $first_name ?></a>
                     <a class="login_btn" href="/users/logout">Logout</a>
 <?php
     }else{

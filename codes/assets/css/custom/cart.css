@@ -332,7 +332,21 @@ body #card_details_modal .modal-dialog .modal-content button.loading span {
 body #card_details_modal .modal-dialog .modal-content button.success {
   background-color: #55CC85;
 }
+body #card_details_modal .modal-dialog .modal-content {
+  position: absolute;
+  top: -900px;
+  z-index: 10;
+}
 .disable_button {
   pointer-events: none !important;
   opacity: 0.5;
+}
+.hide{
+  display: none;
+}
+.error{
+  text-align: center;
+  background-color: #F84F4F;
+  color: white;
+  font-size: 1.2rem;
 }

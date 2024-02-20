@@ -4,7 +4,7 @@
             $user_id = $this->session->userdata('user_id');
             $quantity = $this->input->post('quantity' , TRUE);
 
-            $query = 'INSERT INTO carts (users_id , products_id , quantity) VALUES (? , ? , ?)';
+            $query = 'INSERT INTO carts (user_id , product_id , quantity) VALUES (? , ? , ?)';
 
             $data = array($user_id , $product_id , $quantity);
 
@@ -16,14 +16,14 @@
             $quantity = $this->input->post('quantity' , TRUE);
 
             $query = 'DELETE FROM carts 
-                WHERE users_id = ?
-                AND products_id = ?
+                WHERE user_id = ?
+                AND product_id = ?
                 ';
 
             $data = array($user_id , $product_id);
             $this->db->query($query , $data);
 
-            $query = 'INSERT INTO carts (users_id , products_id , quantity) VALUES (? , ? , ?)';
+            $query = 'INSERT INTO carts (user_id , product_id , quantity) VALUES (? , ? , ?)';
 
             $data = array($user_id , $product_id , $quantity);
             $this->db->query($query , $data);
@@ -33,8 +33,8 @@
             $user_id = $this->session->userdata('user_id');
 
             $query = 'DELETE FROM carts 
-                WHERE users_id = ?
-                AND products_id = ?
+                WHERE user_id = ?
+                AND product_id = ?
                 ';
                 
             $data = array($user_id , $product_id);
@@ -51,11 +51,22 @@
                 sum(carts.quantity) * products.price AS product_total
                 FROM carts
                 LEFT JOIN products
-                ON carts.products_id = products.id
-                WHERE carts.users_id = ?
-                GROUP BY carts.products_id
+                ON carts.product_id = products.id
+                WHERE carts.user_id = ?
+                GROUP BY carts.product_id
                 ';
 
             return $this->db->query($query , array($user_id))->result_array();
+        }
+
+        public function get_cart_total_price(){
+            $cart_products = $this->get_cart_products();
+            $sum = 0;
+
+            foreach($cart_products as $cart_product){
+                $sum += $cart_product['product_total'];
+            }
+
+            return $sum;
         }
     }

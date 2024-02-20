@@ -7,7 +7,7 @@
                 products.id AS product_id
                 FROM products
                 INNER JOIN categories
-                ON products.categories_id = categories.id
+                ON products.category_id = categories.id
                 WHERE products.name LIKE ? 
                 AND categories.name LIKE ?
                 ';
@@ -28,10 +28,10 @@
         public function get_similar_products($product_id){
             $query = 'SELECT * FROM products WHERE id = ?';
             $result = $this->db->query($query , array($product_id))->row_array();
-            $category_id = $result['categories_id'];
+            $category_id = $result['category_id'];
 
             $query = 'SELECT * FROM products 
-                WHERE categories_id = ? AND
+                WHERE category_id = ? AND
                 id != ?
                 LIMIT 5
                 ';
@@ -44,7 +44,7 @@
                 count(*) as product_count
                 FROM products
                 INNER JOIN categories
-                ON products.categories_id = categories.id
+                ON products.category_id = categories.id
                 GROUP BY categories.name
                 ';
 

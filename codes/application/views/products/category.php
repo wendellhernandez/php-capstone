@@ -12,7 +12,6 @@
         <script src="/assets/js/vendor/popper.min.js"></script>
         <script src="/assets/js/vendor/bootstrap.min.js"></script>
         <script src="/assets/js/vendor/bootstrap-select.min.js"></script>
-        <script src="https://kit.fontawesome.com/02987b8fb9.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css">
         <link rel="stylesheet" href="/assets/css/vendor/bootstrap-select.min.css">
 
