@@ -2,10 +2,17 @@
                 <input type="hidden" name="category" value="<?= $current_category ?>">
                 <input type="text" name="search" placeholder="Search Products" value="<?= $search ?>">
             </form>
-            <a class="show_cart" href="cart.html">Cart (0)</a>
+<?php
+    if($is_logged_in){
+?>
+            <a class="show_cart" href="/carts">Cart (<?= count($cart_products) ?>)</a>
+<?php
+    }
+?>
             <form class="categories_form">
                 <h3>Categories</h3>
                 <ul>
+                    <form></form>
                     <li>
                         <form action="/products/category_partial" method="post" class="category_form">
                             <input type="hidden" name="category" value="">

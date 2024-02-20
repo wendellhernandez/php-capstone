@@ -19,6 +19,25 @@
             return $this->db->query($query , $data)->result_array();
         }
 
+        public function get_product_by_id($product_id){
+            $query = 'SELECT * FROM products WHERE id = ?';
+
+            return $this->db->query($query , array($product_id))->row_array();
+        }
+
+        public function get_similar_products($product_id){
+            $query = 'SELECT * FROM products WHERE id = ?';
+            $result = $this->db->query($query , array($product_id))->row_array();
+            $category_id = $result['categories_id'];
+
+            $query = 'SELECT * FROM products 
+                WHERE categories_id = ? AND
+                id != ?
+                LIMIT 5
+                ';
+            return $this->db->query($query , array($category_id , $product_id))->result_array();
+        }
+
         public function get_categories(){
             $query = 'SELECT 
                 categories.name AS category_name ,
