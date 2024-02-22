@@ -71,7 +71,7 @@
         if(!empty($orders[$i])){
 ?>
                             <tr>
-                                <td><span><a href="#"><?= $orders[$i]['order_id'] ?></a></span></td>
+                                <td><span><a href="/orders/show/<?= $orders[$i]['order_id'] ?>"><?= $orders[$i]['order_id'] ?></a></span></td>
                                 <td><span><?= $orders[$i]['order_date'] ?></span></td>
                                 <td><span><?= $orders[$i]['full_name'] ?><span><?= $orders[$i]['full_address'] ?></span></span></td>
                                 <td><span>$ <?= $orders[$i]['order_total_amount'] ?></span></td>

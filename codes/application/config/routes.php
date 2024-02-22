@@ -58,5 +58,6 @@ $route['login'] = 'users/login';
 
 $route['admin'] = 'users/login';
 $route['dashboard/orders'] = 'orders/admin';
+$route['dashboard/products'] = 'products/admin_products';
 
 $route['handleStripePayment']['post'] = "StripePaymentController/handlePayment";

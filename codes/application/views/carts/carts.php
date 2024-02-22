@@ -44,7 +44,11 @@
 <?php
     }
 ?>
-                        <h3>Shipping Information</h3>
+                        <h3>
+                            Shipping Information
+                            <input type="checkbox" id="same_billing_checkbox">
+                            <label for="same_billing_checkbox">Same with billing</label>
+                        </h3>
                         <ul>
                             <li>
                                 <input type="text" name="first_name" value="<?= $shipping_information['first_name'] ?>">
@@ -80,6 +84,44 @@
                                 <input type="text" name="zip" value="<?= $shipping_information['zip'] ?>">
                                 <label>Zip Code</label>
 						        <div id="zip" class="validation_error"></div>
+                            </li>
+                        </ul>
+                        <h3 class="billing_title">Billing Information</h3>
+                        <ul>
+                            <li>
+                                <input type="text" name="first_name_billing">
+                                <label>First Name</label>
+						        <div id="first_name_billing" class="validation_error"></div>
+                            </li>
+                            <li>
+                                <input type="text" name="last_name_billing">
+                                <label>Last Name</label>
+						        <div id="last_name_billing" class="validation_error"></div>
+                            </li>
+                            <li>
+                                <input type="text" name="address_1_billing">
+                                <label>Address 1</label>
+						        <div id="address_1_billing" class="validation_error"></div>
+                            </li>
+                            <li>
+                                <input type="text" name="address_2_billing">
+                                <label>Address 2</label>
+						        <div id=""address_2_billing" class="validation_error"></div>
+                            </li>
+                            <li>
+                                <input type="text" name="city_billing">
+                                <label>City</label>
+						        <div id="city_billing" class="validation_error"></div>
+                            </li>
+                            <li>
+                                <input type="text" name="state_billing">
+                                <label>State</label>
+						        <div id="state_billing" class="validation_error"></div>
+                            </li>
+                            <li>
+                                <input type="text" name="zip_billing">
+                                <label>Zip Code</label>
+						        <div id="zip_billing" class="validation_error"></div>
                             </li>
                         </ul>
                         <h3>Order Summary</h3>

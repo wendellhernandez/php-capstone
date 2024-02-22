@@ -1,16 +1,45 @@
 <?php
     class Order extends CI_Model{
         public function set_orders(){
+            $cart_products = $this->Cart->get_cart_products();
             $user_id = $this->session->userdata('user_id');
             $total_price = $this->Cart->get_cart_total_price();
-            $shipping_fee = count($this->Cart->get_cart_products()) * 1.7;
+            $shipping_fee = count($cart_products) * 1.7;
             $total_plus_shipping = $total_price + $shipping_fee;
+            $order_id = $this->get_latest_order_id() + 1;
 
-            $query = 'INSERT INTO orders(user_id , total_amount)
-                VALUES(? , ?);
+            $query = 'INSERT INTO orders(id , user_id , total_amount)
+                VALUES(? , ? , ?);
             ';
 
-            $this->db->query($query , array($user_id , $total_plus_shipping));
+            $this->db->query($query , array($order_id , $user_id , $total_plus_shipping));
+
+            foreach($cart_products as $cart_product){
+                $query = 'INSERT INTO 
+                    order_details(order_id , product_name , price , quantity , total)
+                    VALUES
+                    (? , ? , ? , ? , ?);
+                ';
+
+                $data = array($order_id , $cart_product['product_name'] , $cart_product['product_price'] , $cart_product['carts_quantity'] , $cart_product['product_total']);
+
+                $this->db->query($query , $data);
+            }
+        }
+
+        public function get_latest_order_id(){
+            $query = 'SELECT id FROM orders
+                ORDER BY id DESC
+                LIMIT 1
+            ';
+
+            $result = $this->db->query($query)->row_array();
+
+            if(empty($result['id'])){
+                return 0;
+            }else{
+                return $result['id'];
+            }
         }
 
         public function get_orders(){

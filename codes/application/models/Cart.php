@@ -47,7 +47,10 @@
             $query = 'SELECT 
                 * , 
                 sum(carts.quantity) AS carts_quantity,
-                sum(carts.quantity) * products.price AS product_total
+                sum(carts.quantity) * products.price AS product_total,
+                products.id AS product_id,
+                products.name AS product_name,
+                products.price AS product_price
                 FROM carts
                 LEFT JOIN products
                 ON carts.product_id = products.id

@@ -43,4 +43,33 @@
 
             $this->load->view('products/show' , $data);
         }
+
+        public function admin_products(){
+            $this->User->if_not_logged_in_redirect();
+
+            $data = array(
+                'aside_header_title' => 'Products',
+                'first_name' => $this->session->userdata('first_name'),
+                'categories' => $this->Product->get_categories()
+			);
+
+            $this->load->view('products/admin_products' , $data);
+        }
+
+        public function admin_products_partial(){
+            $data = array(
+                'products' => $this->Product->get_products(),
+                'categories' => $this->Product->get_categories(),
+                'total_count' => $this->Product->count_all_products(),
+                'search' => $this->input->post('search' , TRUE),
+                'current_category' => $this->input->post('category' , TRUE),
+                'cart_products' => $this->Cart->get_cart_products()
+			);
+
+            $this->load->view('partials/admin_products_partial' , $data);
+        }
+
+        public function add_product(){
+            $this->Product->set_product();
+        }
     }

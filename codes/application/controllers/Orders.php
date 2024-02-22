@@ -4,6 +4,7 @@
             $this->User->if_not_logged_in_redirect();
 
             $data = array(
+                'aside_header_title' => 'Orders',
                 'first_name' => $this->session->userdata('first_name')
             );
 

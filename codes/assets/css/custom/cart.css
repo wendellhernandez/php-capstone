@@ -350,3 +350,7 @@ body #card_details_modal .modal-dialog .modal-content {
   color: white;
   font-size: 1.2rem;
 }
+#same_billing_checkbox{
+  margin-left: 120px;
+  display: inline-block;
+}
