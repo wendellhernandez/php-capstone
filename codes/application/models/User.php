@@ -128,4 +128,22 @@
 
             return $this->db->query($query , array($email))->row_array();
         }
+
+        public function if_logged_in_redirect(){
+			$is_admin = $this->session->userdata('is_admin');
+
+			if(!empty($this->session->userdata('user_id')) && $is_admin){
+				redirect('/dashboard/orders');
+			}else if(!empty($this->session->userdata('user_id'))){
+				redirect('/products');
+			}
+		}
+
+        public function if_not_logged_in_redirect(){
+			$is_admin = $this->session->userdata('is_admin');
+
+			if(empty($this->session->userdata('user_id')) || !$is_admin){
+				redirect('/login');
+			}
+		}
     }

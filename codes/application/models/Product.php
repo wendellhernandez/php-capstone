@@ -61,4 +61,11 @@
 
             return $sum;
         }
+
+        public function set_sold_count(){
+            $query = 'UPDATE products 
+                SET sold = ?
+                WHERE ;
+            ';
+        }
     }

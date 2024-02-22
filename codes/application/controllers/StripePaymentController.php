@@ -21,14 +21,9 @@
                 
             $this->session->set_flashdata('success', 'Payment has been successful.');
 
-            $query = 'INSERT INTO orders(user_id , total_amount)
-                VALUES(? , ?);
-            ';
-            $user_id = $this->session->userdata('user_id');
-            $this->db->query($query , array($user_id , $total_plus_shipping));
+            $this->Order->set_orders();
 
-            $query = 'DELETE FROM carts WHERE user_id = ?';
-            $this->db->query($query , array($user_id));
+            $this->Cart->delete_user_cart();
                 
             redirect('/carts');
         }

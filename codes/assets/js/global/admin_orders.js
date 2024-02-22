@@ -1,37 +1,52 @@
 $(document).ready(function() {
-    /* $("body").on("click", ".switch", function() {
-        window.open("/dashboard", '_blank');
-    }); */
-
-    $("body").on("change", ".status_selectpicker", function() {
-        $(this).closest("form").find("input[name=status_id]").val($(this).val());
-        $(this).closest("form").trigger("submit");
+    $('.profile_dropdown').on('click', function() {
+        let newTop = $(this).offset().top + $(this).outerHeight();
+        let newLeft = $(this).offset().left;
+        
+        $('.admin_dropdown').css({
+            'top': newTop + 'px',
+            'left': newLeft + 'px'
+        });
     });
 
-    $("body").on("submit", ".update_status_form", function() {
-        let form = $(this);
-        $.post(form.attr("action"), form.serialize(), function(res) {
-            $(".wrapper > section").html(res);
-            $(".selectpicker").selectpicker("refresh");
-        });
+    $.get('/orders/admin_orders_partial' , function(res){
+        $("section").html(res);
+        $(".selectpicker").selectpicker("refresh");
+    })
 
+    $("body").on("submit", ".search_form", function() {
+        ajax($(this));
         return false;
     });
 
-    $("body").on("click", ".status_form button", function() {
-        let button = $(this);
-        $(".status_form").find("input[name=status_id]").val(button.val());
-        $(".status_form").find(".active").removeClass("active");
-        button.addClass("active");
+    $("body").on("submit", ".status_forms", function() {
+        ajax($(this));
+        return false;
+    });
 
-    })
+    $("body").on("click", ".status_forms", function(e) {
+        e.preventDefault();
+        $(this).submit();
+    });
 
-    $("body").on("submit", ".status_form", function() {
-        let form = $(this);
-        $.post(form.attr("action"), form.serialize(), function(res) {
-            $("tbody").html(res);
-            $(".selectpicker").selectpicker("refresh");
-        });
+    $("body").on("submit", ".status_picker", function() {
+        ajax($(this));
+        return false;
+    });
+
+    $("body").on("change", ".selectpicker", function() {
+        $(this).parent().submit();
+    });
+
+    $("body").on("submit", ".pagination_form", function() {
+        ajax($(this));
         return false;
     });
 });
+
+function ajax(element){
+    $.post(element.attr("action"), element.serialize(), function(res) {
+        $("section").html(res);
+        $(".selectpicker").selectpicker("refresh");
+    });
+}

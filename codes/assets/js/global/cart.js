@@ -112,6 +112,8 @@ $(document).ready(function() {
                     .removeClass('hide')
                     .find('.alert')
                     .text(res.error.message);
+
+                $('form.pay_form button').text('Pay')
             } else {
                 var token = res['id'];
                 $stripeForm.find('input[type=text]').empty();

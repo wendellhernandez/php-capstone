@@ -56,4 +56,7 @@ $route['translate_uri_dashes'] = FALSE;
 $route['signup'] = 'users/signup';
 $route['login'] = 'users/login';
 
+$route['admin'] = 'users/login';
+$route['dashboard/orders'] = 'orders/admin';
+
 $route['handleStripePayment']['post'] = "StripePaymentController/handlePayment";

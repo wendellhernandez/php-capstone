@@ -44,8 +44,7 @@
         public function get_cart_products(){
             $user_id = $this->session->userdata('user_id');
 
-            $query = 
-            'SELECT 
+            $query = 'SELECT 
                 * , 
                 sum(carts.quantity) AS carts_quantity,
                 sum(carts.quantity) * products.price AS product_total
@@ -68,5 +67,12 @@
             }
 
             return $sum;
+        }
+
+        public function delete_user_cart(){
+            $user_id = $this->session->userdata('user_id');
+            $query = 'DELETE FROM carts WHERE user_id = ?;';
+
+            $this->db->query($query , array($user_id));
         }
     }

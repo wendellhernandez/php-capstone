@@ -6,7 +6,7 @@ $(document).ready(function() {
             $('#credentials').html(data.credentials);
 
             if(data.success == 'success'){
-                window.location.href = "/products";
+                window.location.href = "/login";
             }
         } , 'json');
 
