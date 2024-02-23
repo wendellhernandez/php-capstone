@@ -11,10 +11,6 @@ $(document).ready(function() {
         $("body").removeClass("show_popover_overlay");
     });
 
-    $("body").on("click", ".upload_image", function() {
-        $(".image_input").trigger("click");
-    });
-
     $.get("/products/admin_products_partial" , function(res) {
         $("section").html(res);
     })
@@ -45,7 +41,7 @@ $(document).ready(function() {
             $('#add_price_error').html(res.price_error);
             $('#add_inventory_error').html(res.inventory_error);
 
-            if(res.success == 'Product Added Successfuly'){
+            if(res.success){
                 $.get("/products/admin_products_partial" , function(res) {
                     $("section").html(res);
                 })
@@ -53,7 +49,35 @@ $(document).ready(function() {
                 $('.close_modal').trigger('click');
             }
         } , 'json')
-        
+        // return false;
+    })
+
+    for(let i=1; i<=5; i++){
+        $("body").on("change", `.add_image_${i}`, function(event) {
+            file = this.files[0];
+    
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function (event) {
+                    $(`.add_preview_image_${i}`).attr("src", event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+
+    for(let i=1; i<=5; i++){
+        $("body").on("click", `.add_preview_image_${i}`, function() {
+            $(`.add_image_${i}`).trigger('click');
+        });
+    }
+
+    $("body").on("submit" , ".delete_product_form" , function() {
+        $.post($(this).attr("action") , $(this).serialize() , function(res) {
+            $("section").html(res);
+            $('.popover_overlay').hide();
+        })
+
         return false;
     })
 });

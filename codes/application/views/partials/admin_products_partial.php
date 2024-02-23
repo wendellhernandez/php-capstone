@@ -49,11 +49,16 @@
                         <tbody>
 <?php
     foreach($products as $product){
+        $images = json_decode($product['product_image_json']);
+        $src_1 = '';
+        if(!empty($images->image_1)){
+            $src_1 = "src='/assets/images/products/$images->image_1'";
+        }
 ?>
                             <tr>
                                 <td>
                                     <span>
-                                        <img src="/assets/images/products/<?= $product['product_name'] ?>.jpg" alt="#">
+                                        <img <?= $src_1 ?>>
                                         <?= $product['product_name'] ?>
                                     </span>
                                 </td>
@@ -67,7 +72,9 @@
                                         <button class="edit_product" data-toggle="modal" data-target="#edit_product_modal">Edit</button>
                                         <button class="delete_product">X</button>
                                     </span>
-                                    <form class="delete_product_form" action="process.php" method="post">
+                                    <form class="delete_product_form" action="/products/delete_product/<?= $product['product_id'] ?>" method="post">
+                                        <input type="hidden" name="category" value="<?= $category['category_name'] ?>">
+                                        <input type="hidden" name="search" value="<?= $search ?>">
                                         <p>Are you sure you want to remove this item?</p>
                                         <button type="button" class="cancel_remove">Cancel</button>
                                         <button type="submit">Remove</button>

@@ -7,12 +7,14 @@
                 products.id AS product_id,
                 categories.name AS category_name,
                 products.stocks AS inventory,
-                products.sold AS products_sold
+                products.sold AS products_sold,
+                products.product_image_json AS product_image_json
                 FROM products
                 INNER JOIN categories
                 ON products.category_id = categories.id
                 WHERE products.name LIKE ? 
                 AND categories.name LIKE ?
+                ORDER BY products.id DESC
                 ';
 
             $search = $this->input->post('search' , TRUE);
@@ -74,6 +76,12 @@
             return $this->db->query($query)->result_array();
         }
 
+        public function get_categories_table(){
+            $query = 'SELECT * FROM categories;';
+
+            return $this->db->query($query)->result_array();
+        }
+
         public function count_all_products(){
             $categories = $this->Product->get_categories();
             $sum = 0;
@@ -101,14 +109,40 @@
             $category = $this->input->post('category' , TRUE);
             $price = $this->input->post('price' , TRUE);
             $inventory = $this->input->post('inventory' , TRUE);
+            $product_image_json = array();
+
+            
+
+            for($i=1; $i<=5; $i++){
+                $file = $_FILES["image_$i"];
+                $file_name = $file['name'];
+                if(!empty($file_name)){
+                    $file_ext_explode = explode('.' , $file_name);
+                    $file_ext = strtolower(end($file_ext_explode));
+                    $file_tmp_name = $file["tmp_name"];
+                    $error = $file["error"];
+                    $allowed = array('jpg' , 'jpeg' , 'png' , 'gif');
+                    $file_destination = 'assets/images/products/' . $product_name . $i . '.' . $file_ext;
+
+                    if($error == 0 && in_array($file_ext , $allowed) && !empty($file_name)){
+                        $product_image_json["image_$i"] = $product_name . $i . '.' . $file_ext;
+
+                        move_uploaded_file($file_tmp_name , $file_destination);
+                    }else{
+                        $product_image_json["image_$i"] = 'blank.png';
+                    }
+                }
+            }
+
+            $product_image_json = json_encode($product_image_json);
 
             $query = 'INSERT INTO products 
-                (user_id , name , description , category_id , price , stocks)
+                (user_id , name , description , category_id , price , stocks , product_image_json)
                 VALUES
-                (? , ? , ? , ? , ? , ?);
+                (? , ? , ? , ? , ? , ? , ?);
             ';
 
-            $data = array($user_id , $product_name , $description , $category , $price , $inventory);
+            $data = array($user_id , $product_name , $description , $category , $price , $inventory , $product_image_json);
 
             $this->db->query($query , $data);
         }
@@ -129,7 +163,7 @@
                     'description_error' => form_error('description'),
                     'price_error' => form_error('price'),
                     'inventory_error' => form_error('inventory'),
-                    'success' => ''
+                    'success' => false
                 );
 
                 echo json_encode($json_data);
@@ -140,10 +174,16 @@
                     'description_error' => '',
                     'price_error' => '',
                     'inventory_error' => '',
-                    'success' => 'Product Added Successfuly'
+                    'success' => true
                 );
 
                 echo json_encode($json_data);
             }
+        }
+
+        public function remove_product($product_id){
+            $query = 'DELETE FROM products WHERE id = ?';
+
+            $this->db->query($query , array($product_id));
         }
     }

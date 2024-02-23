@@ -50,7 +50,8 @@
             $data = array(
                 'aside_header_title' => 'Products',
                 'first_name' => $this->session->userdata('first_name'),
-                'categories' => $this->Product->get_categories()
+                'categories' => $this->Product->get_categories(),
+                'categories_table' => $this->Product->get_categories_table()
 			);
 
             $this->load->view('products/admin_products' , $data);
@@ -60,6 +61,7 @@
             $data = array(
                 'products' => $this->Product->get_products(),
                 'categories' => $this->Product->get_categories(),
+                'categories_table' => $this->Product->get_categories_table(),
                 'total_count' => $this->Product->count_all_products(),
                 'search' => $this->input->post('search' , TRUE),
                 'current_category' => $this->input->post('category' , TRUE),
@@ -71,5 +73,21 @@
 
         public function add_product(){
             $this->Product->set_product();
+        }
+
+        public function delete_product($product_id){
+            $this->Product->remove_product($product_id);
+
+            $data = array(
+                'products' => $this->Product->get_products(),
+                'categories' => $this->Product->get_categories(),
+                'categories_table' => $this->Product->get_categories_table(),
+                'total_count' => $this->Product->count_all_products(),
+                'search' => $this->input->post('search' , TRUE),
+                'current_category' => $this->input->post('category' , TRUE),
+                'cart_products' => $this->Cart->get_cart_products()
+			);
+
+            $this->load->view('partials/admin_products_partial' , $data);
         }
     }

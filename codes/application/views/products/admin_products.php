@@ -34,16 +34,16 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <button data-dismiss="modal" aria-label="Close" class="close_modal"></button>
-                        <form class="add_product_form" action="/products/add_product" method="post">
+                        <form class="add_product_form" action="/products/add_product" method="post" enctype="multipart/form-data">
                             <h2>Add a Product</h2>
                             <ul>
                                 <li>
-                                    <input type="text" name="product_name">
+                                    <input type="text" name="product_name" value="pork">
                                     <label>Product Name</label>
 						            <div id="add_product_name_error" class="validation_error"></div>
                                 </li>
                                 <li>
-                                    <textarea name="description"></textarea>
+                                    <textarea name="description">So Clean. So good. So</textarea>
                                     <label>Description</label>
 						            <div id="add_description_error" class="validation_error"></div>
                                 </li>
@@ -51,9 +51,9 @@
                                     <label>Category</label>
                                     <select class="selectpicker" name="category">
 <?php
-    foreach($categories as $category){
+    foreach($categories_table as $category){
 ?>
-                                        <option value="<?= $category['category_id'] ?>"><?= $category['category_name'] ?></option>
+                                        <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
 <?php
     }
 ?>
@@ -72,13 +72,31 @@
                                 <li>
                                     <label>Upload Images (5 Max)</label>
                                     <ul>
-                                        <li><button type="button" class="upload_image"></button></li>
+                                        <li>
+                                            <img src="/assets/images/blank.png" class="add_preview_image_1">
+                                        </li>
+                                        <li>
+                                            <img src="/assets/images/blank.png" class="add_preview_image_2">
+                                        </li>
+                                        <li>
+                                            <img src="/assets/images/blank.png" class="add_preview_image_3">
+                                        </li>
+                                        <li>
+                                            <img src="/assets/images/blank.png" class="add_preview_image_4">
+                                        </li>
+                                        <li>
+                                            <img src="/assets/images/blank.png" class="add_preview_image_5">
+                                        </li>
                                     </ul>
-                                    <input type="file" name="image" accept="image/*" class="image_input">
+                                    <input type="file" name="image_1" class="add_image_1">
+                                    <input type="file" name="image_2" class="add_image_2">
+                                    <input type="file" name="image_3" class="add_image_3">
+                                    <input type="file" name="image_4" class="add_image_4">
+                                    <input type="file" name="image_5" class="add_image_5">
                                 </li>
                             </ul>
                             <button type="button" data-dismiss="modal" aria-label="Close">Cancel</button>
-                            <button type="submit">Save</button>
+                            <button type="submit" class="add_product_form_submit">Save</button>
                         </form>
                     </div>
                 </div>
@@ -87,53 +105,7 @@
             <!-- 
                 EDIT PRODUCT FORM MODAL
              -->
-             <div class="modal fade form_modal" id="edit_product_modal" tabindex="-1" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <button data-dismiss="modal" aria-label="Close" class="close_modal"></button>
-                        <form class="delete_product_form" action="/products/edit_product" method="post">
-                            <h2>Edit Product</h2>
-                            <ul>
-                                <li>
-                                    <input type="text" name="product_name">
-                                    <label>Product Name</label>
-                                </li>
-                                <li>
-                                    <textarea name="description"></textarea>
-                                    <label>Description</label>
-                                </li>
-                                <li>
-                                    <label>Category</label>
-                                    <select class="selectpicker">
-                                        <option>Vegetables</option>
-                                        <option>Fruits</option>
-                                        <option>Pork</option>
-                                        <option>Beef</option>
-                                        <option>Chicken</option>
-                                    </select>
-                                </li>
-                                <li>
-                                    <input type="number" name="price" value="1">
-                                    <label>Price</label>
-                                </li>
-                                <li>
-                                    <input type="number" name="inventory" value="1">
-                                    <label>Inventory</label>
-                                </li>
-                                <li>
-                                    <label>Upload Images (5 Max)</label>
-                                    <ul>
-                                        <li><button type="button" class="upload_image"></button></li>
-                                    </ul>
-                                    <input type="file" name="image" accept="image/*" class="image_input">
-                                </li>
-                            </ul>
-                            <button type="button" data-dismiss="modal" aria-label="Close">Cancel</button>
-                            <button type="submit">Save</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+            
         </div>
         <div class="popover_overlay"></div>
     </body>
