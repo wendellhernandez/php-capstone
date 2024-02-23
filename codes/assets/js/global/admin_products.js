@@ -37,4 +37,23 @@ $(document).ready(function() {
         e.preventDefault();
         $(this).submit();
     })
+
+    $("body").on("submit" , ".add_product_form" , function() {
+        $.post($(this).attr("action") , $(this).serialize() , function(res) {
+            $('#add_product_name_error').html(res.product_name_error);
+            $('#add_description_error').html(res.description_error);
+            $('#add_price_error').html(res.price_error);
+            $('#add_inventory_error').html(res.inventory_error);
+
+            if(res.success == 'Product Added Successfuly'){
+                $.get("/products/admin_products_partial" , function(res) {
+                    $("section").html(res);
+                })
+
+                $('.close_modal').trigger('click');
+            }
+        } , 'json')
+        
+        return false;
+    })
 });

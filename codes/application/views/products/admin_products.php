@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="/assets/css/vendor/bootstrap-select.min.css">
 
         <link rel="stylesheet" href="/assets/css/custom/admin_global.css">
+        <link rel="stylesheet" href="/assets/css/custom/admin_products.css">
         <script src="/assets/js/global/admin_products.js"></script>
     </head>
     <body>
@@ -33,16 +34,18 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <button data-dismiss="modal" aria-label="Close" class="close_modal"></button>
-                        <form class="delete_product_form" action="/products/add_product" method="post">
+                        <form class="add_product_form" action="/products/add_product" method="post">
                             <h2>Add a Product</h2>
                             <ul>
                                 <li>
                                     <input type="text" name="product_name">
                                     <label>Product Name</label>
+						            <div id="add_product_name_error" class="validation_error"></div>
                                 </li>
                                 <li>
                                     <textarea name="description"></textarea>
                                     <label>Description</label>
+						            <div id="add_description_error" class="validation_error"></div>
                                 </li>
                                 <li>
                                     <label>Category</label>
@@ -57,12 +60,14 @@
                                     </select>
                                 </li>
                                 <li>
-                                    <input type="number" name="price" value="1">
+                                    <input type="text" name="price" value="1">
                                     <label>Price</label>
+						            <div id="add_price_error" class="validation_error"></div>
                                 </li>
                                 <li>
-                                    <input type="number" name="inventory" value="1">
+                                    <input type="text" name="inventory" value="1">
                                     <label>Inventory</label>
+						            <div id="add_inventory_error" class="validation_error"></div>
                                 </li>
                                 <li>
                                     <label>Upload Images (5 Max)</label>

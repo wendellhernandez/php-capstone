@@ -95,13 +95,20 @@
         public function set_product(){
             $this->validate_set_product_input();
 
+            $user_id = $this->session->userdata('user_id');
+            $product_name = $this->input->post('product_name' , TRUE);
+            $description = $this->input->post('description' , TRUE);
+            $category = $this->input->post('category' , TRUE);
+            $price = $this->input->post('price' , TRUE);
+            $inventory = $this->input->post('inventory' , TRUE);
+
             $query = 'INSERT INTO products 
-                (name , description , category_id , price , stocks)
+                (user_id , name , description , category_id , price , stocks)
                 VALUES
-                (? , ? , ? , ? , ?);
+                (? , ? , ? , ? , ? , ?);
             ';
 
-            $data = array();
+            $data = array($user_id , $product_name , $description , $category , $price , $inventory);
 
             $this->db->query($query , $data);
         }
@@ -110,7 +117,7 @@
             $this->form_validation->set_rules('product_name' , 'Product Name' , 'trim|required|min_length[2]');
             $this->form_validation->set_rules('description' , 'Description' , 'trim|required|min_length[2]');
             $this->form_validation->set_rules('price' , 'Price' , 'trim|required|numeric');
-            $this->form_validation->set_rules('inventory' , 'Inventory' , 'trim|required|numeric');
+            $this->form_validation->set_rules('inventory' , 'Inventory' , 'trim|required|is_natural_no_zero');
 
             $this->set_product_errors();
         }
@@ -118,11 +125,10 @@
         public function set_product_errors(){
             if(!$this->form_validation->run()){
                 $json_data = array(
-                    'first_name' => form_error('first_name'),
-                    'last_name' => form_error('last_name'),
-                    'email' => form_error('email'),
-                    'password' => form_error('password'),
-                    'confirm_password' => form_error('confirm_password'),
+                    'product_name_error' => form_error('product_name'),
+                    'description_error' => form_error('description'),
+                    'price_error' => form_error('price'),
+                    'inventory_error' => form_error('inventory'),
                     'success' => ''
                 );
 
@@ -130,12 +136,11 @@
                 die();
             }else{
                 $json_data = array(
-                    'first_name' => '',
-                    'last_name' => '',
-                    'email' => '',
-                    'password' => '',
-                    'confirm_password' => '',
-                    'success' => 'Signup Successful'
+                    'product_name_error' => '',
+                    'description_error' => '',
+                    'price_error' => '',
+                    'inventory_error' => '',
+                    'success' => 'Product Added Successfuly'
                 );
 
                 echo json_encode($json_data);

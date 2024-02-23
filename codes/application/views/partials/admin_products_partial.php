@@ -12,7 +12,7 @@
                                 <input type="hidden" name="category" value="">
                                 <input type="hidden" name="search" value="<?= $search ?>">
                                 <button type="submit">
-                                    <span><?= $total_count ?></span><img src="/assets/images/apple.png"><h4>All Products</h4>
+                                    <span><?= $total_count ?></span><img src="/assets/images/categories/all_products.png"><h4>All Products</h4>
                                 </button>
                             </form>
                         </li>
@@ -24,7 +24,7 @@
                             <input type="hidden" name="category" value="<?= $category['category_name'] ?>">
                             <input type="hidden" name="search" value="<?= $search ?>">
                             <button type="submit">
-                                <span><?= $category['product_count'] ?></span><img src="/assets/images/apple.png"><h4><?= $category['category_name'] ?></h4>
+                                <span><?= $category['product_count'] ?></span><img src="/assets/images/categories/<?= $category['category_name'] ?>.png"><h4><?= $category['category_name'] ?></h4>
                             </button>
                         </form>
                     </li>
@@ -53,7 +53,7 @@
                             <tr>
                                 <td>
                                     <span>
-                                        <img src="/assets/images/food.png" alt="#">
+                                        <img src="/assets/images/products/<?= $product['product_name'] ?>.jpg" alt="#">
                                         <?= $product['product_name'] ?>
                                     </span>
                                 </td>
