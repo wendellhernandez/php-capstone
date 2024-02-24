@@ -34,28 +34,37 @@ $(document).ready(function() {
         $(this).submit();
     })
 
-    $("body").on("submit" , ".add_product_form" , function() {
-        $.post($(this).attr("action") , $(this).serialize() , function(res) {
-            $('#add_product_name_error').html(res.product_name_error);
-            $('#add_description_error').html(res.description_error);
-            $('#add_price_error').html(res.price_error);
-            $('#add_inventory_error').html(res.inventory_error);
+    $("body").on("click", '.add_image_button', function() {
+        $('#add_image_input').trigger('click');
+    });
 
-            if(res.success){
-                $.get("/products/admin_products_partial" , function(res) {
-                    $("section").html(res);
-                })
+    $("body").on("click", '.edit_image_button', function() {
+        $('#edit_image_input').trigger('click');
+    });
 
-                $('.close_modal').trigger('click');
+    $("body").on("click", '.add_category_button', function() {
+        $('#add_category_input').trigger('click');
+    });
+
+    $("body").on("change", `#add_image_input`, function() {
+        let html = '';
+
+        for(let i=1; i<=5; i++){
+            file = this.files[i-1];
+        
+            if (file) {
+                html += 
+                `<li>
+                    <img src="" class="add_preview_image_${i}">
+                </li>`;
             }
-        } , 'json')
-        // return false;
-    })
+        }
 
-    for(let i=1; i<=5; i++){
-        $("body").on("change", `.add_image_${i}`, function(event) {
-            file = this.files[0];
-    
+        $('.add_preview_image_container').html(html);
+
+        for(let i=1; i<=5; i++){
+            file = this.files[i-1];
+        
             if (file) {
                 let reader = new FileReader();
                 reader.onload = function (event) {
@@ -63,14 +72,53 @@ $(document).ready(function() {
                 };
                 reader.readAsDataURL(file);
             }
-        });
-    }
+        }
+    });
 
-    for(let i=1; i<=5; i++){
-        $("body").on("click", `.add_preview_image_${i}`, function() {
-            $(`.add_image_${i}`).trigger('click');
-        });
-    }
+    $("body").on("change", `#edit_image_input`, function() {
+        let html = '';
+
+        for(let i=1; i<=5; i++){
+            file = this.files[i-1];
+        
+            if (file) {
+                html += 
+                `<li>
+                    <img src="" class="edit_preview_image_${i}">
+                </li>`;
+            }
+        }
+
+        $('.edit_preview_image_container').html(html);
+
+        for(let i=1; i<=5; i++){
+            file = this.files[i-1];
+        
+            if (file) {
+                let reader = new FileReader();
+                reader.onload = function (event) {
+                    $(`.edit_preview_image_${i}`).attr("src", event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    });
+
+    $("body").on("change", `#add_category_input`, function() {
+        file = this.files[0];
+        
+        if (file) {
+            let html = '<img src="" class="category_preview_image">';
+
+            $('.category_preview_image_container').html(html);
+
+            let reader = new FileReader();
+            reader.onload = function (event) {
+                $(".category_preview_image").attr("src", event.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
     $("body").on("submit" , ".delete_product_form" , function() {
         $.post($(this).attr("action") , $(this).serialize() , function(res) {
@@ -80,4 +128,20 @@ $(document).ready(function() {
 
         return false;
     })
+
+    $("body").on("submit" , ".update_edit_form" , function() {
+        $.post($(this).attr("action") , $(this).serialize() , function(res) {
+            $("#edit_product_modal").html(res);
+        })
+
+        $('#edit_product_modal').show();
+        $(".modal-backdrop").show();
+
+        return false;
+    })
+
+    $("body").on("click", '.edit_close_modal , .edit_cancel_modal', function() {
+        $('#edit_product_modal').hide();
+        $(".modal-backdrop").hide();
+    });
 });

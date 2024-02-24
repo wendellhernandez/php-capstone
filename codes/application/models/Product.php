@@ -25,7 +25,15 @@
         }
 
         public function get_product_by_id($product_id){
-            $query = 'SELECT * FROM products WHERE id = ?';
+            $query = 'SELECT 
+                *, 
+                products.name AS product_name,
+                products.id AS product_id,
+                products.category_id AS category_id
+                FROM products
+                LEFT JOIN categories
+                ON products.category_id = categories.id
+                WHERE products.id = ?';
 
             return $this->db->query($query , array($product_id))->row_array();
         }
@@ -40,6 +48,7 @@
                 id != ?
                 LIMIT 5
                 ';
+                
             return $this->db->query($query , array($category_id , $product_id))->result_array();
         }
 
@@ -111,25 +120,29 @@
             $inventory = $this->input->post('inventory' , TRUE);
             $product_image_json = array();
 
-            
-
             for($i=1; $i<=5; $i++){
-                $file = $_FILES["image_$i"];
-                $file_name = $file['name'];
-                if(!empty($file_name)){
-                    $file_ext_explode = explode('.' , $file_name);
-                    $file_ext = strtolower(end($file_ext_explode));
-                    $file_tmp_name = $file["tmp_name"];
-                    $error = $file["error"];
-                    $allowed = array('jpg' , 'jpeg' , 'png' , 'gif');
-                    $file_destination = 'assets/images/products/' . $product_name . $i . '.' . $file_ext;
-
-                    if($error == 0 && in_array($file_ext , $allowed) && !empty($file_name)){
-                        $product_image_json["image_$i"] = $product_name . $i . '.' . $file_ext;
-
-                        move_uploaded_file($file_tmp_name , $file_destination);
-                    }else{
-                        $product_image_json["image_$i"] = 'blank.png';
+                if(!empty($_FILES['add_image']['name'][$i-1])){
+                    $_FILES['userfile']['name'] = $_FILES['add_image']['name'][$i-1];
+                    $_FILES['userfile']['type'] = $_FILES['add_image']['type'][$i-1];
+                    $_FILES['userfile']['tmp_name'] = $_FILES['add_image']['tmp_name'][$i-1];
+                    $_FILES['userfile']['error'] = $_FILES['add_image']['error'][$i-1];
+                    $_FILES['userfile']['size'] = $_FILES['add_image']['size'][$i-1];
+    
+                    $config = array(
+                        'file_name'     => $product_name . $i,
+                        'allowed_types' => 'jpg|jpeg|png|gif|webp|avif',
+                        'max_size'      => 6000,
+                        'overwrite'     => true,
+                        'upload_path'   => './assets/images/products',
+                        'remove_spaces' => false
+                    );
+    
+                    $this->upload->initialize($config);
+    
+                    if($this->upload->do_upload()){
+                        $filename = $this->upload->data();
+    
+                        $product_image_json["image_$i"] = $filename['file_name'];
                     }
                 }
             }
@@ -145,6 +158,8 @@
             $data = array($user_id , $product_name , $description , $category , $price , $inventory , $product_image_json);
 
             $this->db->query($query , $data);
+
+            redirect('/dashboard/products');
         }
 
         public function validate_set_product_input(){
@@ -182,8 +197,137 @@
         }
 
         public function remove_product($product_id){
+            $product = $this->get_product_by_id($product_id);
+            $image_string = $product['product_image_json'];
+            $image_json = json_decode($image_string , true);
+            
+            foreach($image_json as $image){
+                unlink("assets/images/products/" . $image);
+            }
+
             $query = 'DELETE FROM products WHERE id = ?';
 
             $this->db->query($query , array($product_id));
+        }
+
+        public function update_product($product_id){
+            $this->validate_set_product_input();
+
+            $product = $this->get_product_by_id($product_id);
+            $image_string = $product['product_image_json'];
+            $image_json = json_decode($image_string , true);
+            
+            foreach($image_json as $image){
+                unlink("assets/images/products/" . $image);
+            }
+
+            $product_name = $this->input->post('product_name' , TRUE);
+            $description = $this->input->post('description' , TRUE);
+            $category = $this->input->post('category' , TRUE);
+            $price = $this->input->post('price' , TRUE);
+            $inventory = $this->input->post('inventory' , TRUE);
+            $product_image_json = array();
+
+            for($i=1; $i<=5; $i++){
+                if(!empty($_FILES['add_image']['name'][$i-1])){
+                    $_FILES['userfile']['name'] = $_FILES['add_image']['name'][$i-1];
+                    $_FILES['userfile']['type'] = $_FILES['add_image']['type'][$i-1];
+                    $_FILES['userfile']['tmp_name'] = $_FILES['add_image']['tmp_name'][$i-1];
+                    $_FILES['userfile']['error'] = $_FILES['add_image']['error'][$i-1];
+                    $_FILES['userfile']['size'] = $_FILES['add_image']['size'][$i-1];
+    
+                    $config = array(
+                        'file_name'     => $product_name . $i,
+                        'allowed_types' => 'jpg|jpeg|png|gif|webp|avif',
+                        'max_size'      => 6000,
+                        'overwrite'     => true,
+                        'upload_path'   => './assets/images/products',
+                        'remove_spaces' => false
+                    );
+    
+                    $this->upload->initialize($config);
+    
+                    if($this->upload->do_upload()){
+                        $filename = $this->upload->data();
+    
+                        $product_image_json["image_$i"] = $filename['file_name'];
+                    }
+                }
+            }
+
+            $product_image_json = json_encode($product_image_json);
+
+            $query = 'UPDATE products SET 
+                name = ? , description = ? , category_id = ? , price = ? , stocks = ? , product_image_json = ?
+                WHERE id = ?;
+            ';
+
+            $data = array($product_name , $description , $category , $price , $inventory , $product_image_json , $product_id);
+
+            $this->db->query($query , $data);
+
+            redirect('/dashboard/products');
+        }
+
+        public function set_category(){
+            $this->validate_set_category_input();
+
+            $category_name = $this->input->post('category_name' , TRUE);
+            $image_name = '';
+
+            $config = array(
+                'file_name'     => $category_name,
+                'allowed_types' => 'jpg|jpeg|png|gif|webp|avif',
+                'max_size'      => 6000,
+                'overwrite'     => true,
+                'upload_path'   => './assets/images/categories',
+                'remove_spaces' => false
+            );
+
+            $this->upload->initialize($config);
+
+            if($this->upload->do_upload('add_category_image')){
+                $filename = $this->upload->data();
+                $image_name = $filename['file_name'];
+            }else{
+                die();
+                redirect('/dashboard/products');
+            }
+
+            $query = 'INSERT INTO categories 
+                (name , image_link)
+                VALUES (? , ?);
+            ';
+
+            $data = array($category_name , $image_name);
+
+            $this->db->query($query , $data);
+
+            redirect('/dashboard/products');
+        }
+
+        public function validate_set_category_input(){
+            $this->form_validation->set_rules('category_name' , 'Category Name' , 'trim|required|min_length[2]');
+
+            $this->set_category_errors();
+        }
+
+        public function set_category_errors(){
+            if(!$this->form_validation->run()){
+                $json_data = array(
+                    'category_name_error' => form_error('category_name'),
+                    'success' => false
+                );
+
+                echo json_encode($json_data);
+                die();
+            }else{
+                $json_data = array(
+                    'category_name_error' => '',
+                    'success' => true
+                );
+
+                echo json_encode($json_data);
+            }
         }
     }

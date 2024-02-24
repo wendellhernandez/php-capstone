@@ -38,12 +38,12 @@
                             <h2>Add a Product</h2>
                             <ul>
                                 <li>
-                                    <input type="text" name="product_name" value="pork">
+                                    <input type="text" name="product_name">
                                     <label>Product Name</label>
 						            <div id="add_product_name_error" class="validation_error"></div>
                                 </li>
                                 <li>
-                                    <textarea name="description">So Clean. So good. So</textarea>
+                                    <textarea name="description"></textarea>
                                     <label>Description</label>
 						            <div id="add_description_error" class="validation_error"></div>
                                 </li>
@@ -73,26 +73,13 @@
                                     <label>Upload Images (5 Max)</label>
                                     <ul>
                                         <li>
-                                            <img src="/assets/images/blank.png" class="add_preview_image_1">
-                                        </li>
-                                        <li>
-                                            <img src="/assets/images/blank.png" class="add_preview_image_2">
-                                        </li>
-                                        <li>
-                                            <img src="/assets/images/blank.png" class="add_preview_image_3">
-                                        </li>
-                                        <li>
-                                            <img src="/assets/images/blank.png" class="add_preview_image_4">
-                                        </li>
-                                        <li>
-                                            <img src="/assets/images/blank.png" class="add_preview_image_5">
+                                            <button type="button" class="upload_image add_image_button"></button>
                                         </li>
                                     </ul>
-                                    <input type="file" name="image_1" class="add_image_1">
-                                    <input type="file" name="image_2" class="add_image_2">
-                                    <input type="file" name="image_3" class="add_image_3">
-                                    <input type="file" name="image_4" class="add_image_4">
-                                    <input type="file" name="image_5" class="add_image_5">
+                                    <ul class="add_preview_image_container">
+
+                                    </ul>
+                                    <input type="file" id="add_image_input" name="add_image[]" multiple="multiple">
                                 </li>
                             </ul>
                             <button type="button" data-dismiss="modal" aria-label="Close">Cancel</button>
@@ -105,7 +92,58 @@
             <!-- 
                 EDIT PRODUCT FORM MODAL
              -->
-            
+            <div class="modal fade form_modal" id="edit_product_modal" tabindex="-1" aria-hidden="true">
+                
+            </div>
+
+            <!-- 
+                ADD / REMOVE CATEGORY FORM MODAL
+             -->
+             <div class="modal fade form_modal" id="add_remove_category_modal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <button data-dismiss="modal" aria-label="Close" class="close_modal"></button>
+                        <form class="add_remove_category_form" action="/products/add_category" method="post" enctype="multipart/form-data">
+                            <h2>Add / Remove Category</h2>
+                            <ul>
+                                <li>
+                                    <input type="text" name="category_name">
+                                    <label>Category Name</label>
+                                </li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li></li>
+                                <li>
+                                    <label>Upload Image</label>
+                                    <ul>
+                                        <li>
+                                            <button type="button" class="upload_image add_category_button"></button>
+                                        </li>
+                                    </ul>
+                                    <ul class="category_preview_image_container">
+
+                                    </ul>
+                                    <input type="file" id="add_category_input" name="add_category_image">
+                                </li>
+<?php
+    foreach($categories_table as $category){
+?>
+                                <li class="category_modal_image_container">
+                                    <label><?= $category['name'] ?></label>
+                                    <img src="/assets/images/categories/<?= $category['image_link'] ?>" class="category_modal_image">
+                                    <button class="delete_image"></button>
+                                </li>
+<?php
+    }
+?>
+                            </ul>
+                            <button type="button" data-dismiss="modal" aria-label="Close">Cancel</button>
+                            <button type="submit" class="add_product_form_submit">Add Category</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="popover_overlay"></div>
     </body>

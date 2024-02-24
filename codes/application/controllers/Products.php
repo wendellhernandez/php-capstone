@@ -90,4 +90,26 @@
 
             $this->load->view('partials/admin_products_partial' , $data);
         }
+
+        public function update_edit_form($product_id){
+            $product = $this->Product->get_product_by_id($product_id);
+            $image_string = $product['product_image_json'];
+            $product_images = json_decode($image_string , true);
+
+            $data = array(
+                'categories_table' => $this->Product->get_categories_table(),
+                'product' => $product,
+                'product_images' => $product_images
+			);
+
+            $this->load->view('partials/admin_products_edit_form_partial' , $data);
+        }
+
+        public function edit_product($product_id){
+            $this->Product->update_product($product_id);
+        }
+
+        public function add_category(){
+            $this->Product->set_category();
+        }
     }
