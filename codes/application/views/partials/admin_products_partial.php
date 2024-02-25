@@ -24,7 +24,7 @@
                                 <input type="hidden" name="category" value="<?= $category['category_name'] ?>">
                                 <input type="hidden" name="search" value="<?= $search ?>">
                                 <button type="submit">
-                                    <span><?= $category['product_count'] ?></span><img src="/assets/images/categories/<?= $category['category_name'] ?>"><h4><?= $category['category_name'] ?></h4>
+                                    <span><?= $category['product_count'] ?></span><img src="/assets/images/categories/<?= $category['category_image'] ?>"><h4><?= $category['category_name'] ?></h4>
                                 </button>
                             </form>
                         </li>
@@ -53,34 +53,32 @@
                         </thead>
                         <tbody>
 <?php
-    foreach($products as $product){
-        $images = json_decode($product['product_image_json'] , true);
-        $src_1 = '';
-        if(!empty($images['image_1'])){
-            $src_1 = "src='/assets/images/products/{$images['image_1']}'";
-        }
+    for($i=6*($page-1); $i<6*$page; $i++){
+        if(!empty($products[$i])){
+            $images = json_decode($products[$i]['product_image_json'] , true);
 ?>
                             <tr>
                                 <td>
                                     <span>
-                                        <img <?= $src_1 ?>>
-                                        <?= $product['product_name'] ?>
+                                        <img src='/assets/images/products/<?= $images['image_1'] ?>'>
+                                        <?= $products[$i]['product_name'] ?>
                                     </span>
                                 </td>
-                                <td><span><?= $product['product_id'] ?></span></td>
-                                <td><span>$ <?= $product['product_price'] ?></span></td>
-                                <td><span><?= $product['category_name'] ?></span></td>
-                                <td><span><?= $product['inventory'] ?></span></td>
-                                <td><span><?= $product['products_sold'] ?></span></td>
+                                <td><span><?= $products[$i]['product_id'] ?></span></td>
+                                <td><span>$ <?= $products[$i]['product_price'] ?></span></td>
+                                <td><span><?= $products[$i]['category_name'] ?></span></td>
+                                <td><span><?= $products[$i]['inventory'] ?></span></td>
+                                <td><span><?= $products[$i]['products_sold'] ?></span></td>
                                 <td>
                                     <span>
-                                        <form action="/products/update_edit_form/<?= $product['product_id'] ?>" class="update_edit_form">
+                                        <form action="/products/update_edit_form/<?= $products[$i]['product_id'] ?>" class="update_edit_form">
                                             <button class="edit_product" data-toggle="modal" data-target="#edit_product_modal">Edit</button>
                                         </form>
                                         <button class="delete_product">X</button>
                                     </span>
-                                    <form class="delete_product_form" action="/products/delete_product/<?= $product['product_id'] ?>" method="post">
+                                    <form class="delete_product_form" action="/products/delete_product/<?= $products[$i]['product_id'] ?>" method="post">
                                         <input type="hidden" name="category" value="<?= $current_category ?>">
+                                        <input type="hidden" name="page" value="<?= $page ?>">
                                         <input type="hidden" name="search" value="<?= $search ?>">
                                         <p>Are you sure you want to remove this item?</p>
                                         <button type="button" class="cancel_remove">Cancel</button>
@@ -89,8 +87,25 @@
                                 </td>
                             </tr>
 <?php
+        }
     }
 ?>
+
+
                         </tbody>
                     </table>
+                </div>
+                <div class="pagination">
+<?php
+    for($i=0; $i<count($products)/6; $i++){
+?>
+                    <form action="/products/admin_products_partial" class="pagination_form" method="post">
+                        <input type="hidden" name="page" value="<?= $i+1 ?>">
+                        <input type="hidden" name="category" value="<?= $current_category ?>">
+                        <input type="hidden" name="search" value="<?= $search ?>">
+                        <input type="submit" value="<?= $i+1 ?>">
+                    </form>
+<?php
+    }
+?>
                 </div>

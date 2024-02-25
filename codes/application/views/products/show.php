@@ -34,20 +34,27 @@
                 <a class="show_cart" href="/carts">Cart (<?= count($cart_products) ?>)</a>
 <?php
     }
+
+    $images = json_decode($product['product_image_json'] , true);
 ?>
                 <a href="/products">Go Back</a>
                 <ul>
                     <li>
-                        <img src="/assets/images/burger.png" alt="food">
+                        <img src="/assets/images/products/<?= $images['image_1'] ?>">
                         <ul>
-                            <li class="active"><button class="show_image"><img src="/assets/images/burger.png" alt="food"></button></li>
-                            <li><button class="show_image"><img src="/assets/images/burger.png" alt="food"></button></li>
-                            <li><button class="show_image"><img src="/assets/images/burger.png" alt="food"></button></li>
-                            <li><button class="show_image"><img src="/assets/images/burger.png" alt="food"></button></li>
+<?php
+    for($i=1; $i<5; $i++){
+        if(!empty($images["image_$i"])){
+?>
+                            <li <?= ($i == 1) ? 'class="active"' : '' ?> ><button class="show_image"><img src="/assets/images/products/<?= $images["image_$i"] ?>"></button></li>
+<?php
+        }
+    }
+?>
                         </ul>
                     </li>
                     <li>
-                        <h2><?= $product['name'] ?></h2>
+                        <h2><?= $product['product_name'] ?></h2>
                         <ul class="rating">
                             <li></li>
                             <li></li>
@@ -58,7 +65,7 @@
                         <span>36 Rating</span>
                         <span class="amount">$ <?= $product['price'] ?></span>
                         <p><?= $product['description'] ?></p>
-                        <form action="/carts/add_to_cart/<?= $product['id'] ?>" method="post" id="add_to_cart_form">
+                        <form action="/carts/add_to_cart/<?= $product['product_id'] ?>" method="post" id="add_to_cart_form">
                             <ul>
                                 <li>
                                     <label>Quantity</label>
@@ -88,10 +95,11 @@
                     <ul>
 <?php
     foreach($similar_products as $similar){
+        $images = json_decode($similar['product_image_json'] , true);
 ?>
                         <li>
                             <a href="/products/show/<?= $similar['id'] ?>">
-                                <img src="/assets/images/food.png" alt="#">
+                                <img src="/assets/images/products/<?= $images["image_1"] ?>">
                                 <h3><?= $similar['name'] ?></h3>
                                 <ul class="rating">
                                     <li></li>

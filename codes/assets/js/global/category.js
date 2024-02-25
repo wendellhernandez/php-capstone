@@ -13,4 +13,11 @@ $(document).ready(function() {
     })
     
     $('form').submit();
+
+    $("body").on("submit", ".pagination_form", function() {
+        $.post($(this).attr("action"), $(this).serialize(), function(res) {
+            $("section").html(res);
+        });
+        return false;
+    });
 });

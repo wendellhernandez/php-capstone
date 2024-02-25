@@ -38,6 +38,12 @@
             return $this->db->query($query , array($product_id))->row_array();
         }
 
+        public function get_product_by_category_id($category_id){
+            $query = 'SELECT * FROM products WHERE category_id = ?';
+
+            return $this->db->query($query , array($category_id))->result_array();
+        }
+
         public function get_similar_products($product_id){
             $query = 'SELECT * FROM products WHERE id = ?';
             $result = $this->db->query($query , array($product_id))->row_array();
@@ -75,6 +81,7 @@
             $query = 'SELECT 
                 categories.name AS category_name ,
                 categories.id AS category_id,
+                categories.image_link AS category_image,
                 count(*) as product_count
                 FROM products
                 INNER JOIN categories
@@ -89,6 +96,14 @@
             $query = 'SELECT * FROM categories;';
 
             return $this->db->query($query)->result_array();
+        }
+
+        public function get_category_by_id($category_id){
+            $query = 'SELECT * FROM categories
+                WHERE id = ?
+            ;';
+
+            return $this->db->query($query , array($category_id))->row_array();
         }
 
         public function count_all_products(){
@@ -210,6 +225,23 @@
             $this->db->query($query , array($product_id));
         }
 
+        public function remove_product_by_category($category_id){
+            $products = $this->get_product_by_category_id($category_id);
+
+            foreach($products as $product){
+                $image_string = $product['product_image_json'];
+                $image_json = json_decode($image_string , true);
+                
+                foreach($image_json as $image){
+                    unlink("assets/images/products/" . $image);
+                }
+            }
+
+            $query = 'DELETE FROM products WHERE category_id = ?';
+
+            $this->db->query($query , array($category_id));
+        }
+
         public function update_product($product_id){
             $this->validate_set_product_input();
 
@@ -329,5 +361,19 @@
 
                 echo json_encode($json_data);
             }
+        }
+
+        public function remove_category($category_id){
+            $this->remove_product_by_category($category_id);
+
+            $category = $this->get_category_by_id($category_id);
+            
+            unlink("assets/images/categories/" . $category['image_link']);
+
+            $query = 'DELETE FROM categories WHERE id = ?';
+
+            $this->db->query($query , array($category_id));
+
+            redirect('/dashboard/products');
         }
     }

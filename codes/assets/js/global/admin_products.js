@@ -144,4 +144,11 @@ $(document).ready(function() {
         $('#edit_product_modal').hide();
         $(".modal-backdrop").hide();
     });
+
+    $("body").on("submit", ".pagination_form", function() {
+        $.post($(this).attr("action"), $(this).serialize(), function(res) {
+            $("section").html(res);
+        });
+        return false;
+    });
 });

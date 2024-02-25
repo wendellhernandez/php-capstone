@@ -70,7 +70,7 @@
 						            <div id="add_inventory_error" class="validation_error"></div>
                                 </li>
                                 <li>
-                                    <label>Upload Images (5 Max)</label>
+                                    <label>Upload Images (4 Max)</label>
                                     <ul>
                                         <li>
                                             <button type="button" class="upload_image add_image_button"></button>
@@ -125,6 +125,7 @@
 
                                     </ul>
                                     <input type="file" id="add_category_input" name="add_category_image">
+                                <label>Remove Category</label>
                                 </li>
 <?php
     foreach($categories_table as $category){
@@ -132,7 +133,7 @@
                                 <li class="category_modal_image_container">
                                     <label><?= $category['name'] ?></label>
                                     <img src="/assets/images/categories/<?= $category['image_link'] ?>" class="category_modal_image">
-                                    <button class="delete_image"></button>
+                                    <a href="/products/delete_category/<?= $category['id'] ?>" class="delete_image"></a>
                                 </li>
 <?php
     }

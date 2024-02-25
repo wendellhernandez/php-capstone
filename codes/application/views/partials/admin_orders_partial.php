@@ -100,7 +100,6 @@
                 <div class="pagination">
 <?php
     for($i=0; $i<count($orders)/6; $i++){
-        if(!empty($orders[$i])){
 ?>
                     <form action="/orders/admin_orders_partial" class="pagination_form" method="post">
                         <input type="hidden" name="page" value="<?= $i+1 ?>">
@@ -109,7 +108,6 @@
                         <input type="submit" value="<?= $i+1 ?>">
                     </form>
 <?php
-        }
     }
 ?>
                 </div>

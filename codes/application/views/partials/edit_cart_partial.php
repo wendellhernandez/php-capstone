@@ -2,9 +2,10 @@
                             <form></form>
 <?php
     foreach($cart_products as $cart_product){
+        $images = json_decode($cart_product['product_image_json'] , true);
 ?>
                             <li>
-                                <img src="/assets/images/burger.png" alt="">
+                                <img src="/assets/images/products/<?= $images['image_1'] ?>">
                                 <h3><?= $cart_product['name'] ?></h3>
                                 <span>$ <?= $cart_product['price'] ?></span>
                                 <ul>

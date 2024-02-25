@@ -1,15 +1,15 @@
 .pagination{
     gap: 8px;
     position: absolute;
-    right: 60px;
-    top: 840px;
+    right: 275px;
+    top: 915px;
 
     input{
         padding: 8px 12px;
         border-radius: 8px;
         border: none;
-        background: #2A2D3E;
-        border: 1px solid #2A2D3E;
+        background: white;
+        border: 1px solid white;
         font-weight: bold;
         color: #B0B0B0;
 

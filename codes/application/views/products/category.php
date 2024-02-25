@@ -18,6 +18,7 @@
         <script src="/assets/js/global/category.js"></script>
         <link rel="stylesheet" href="/assets/css/custom/global.css">
         <link rel="stylesheet" href="/assets/css/custom/product_dashboard.css">
+        <link rel="stylesheet" href="/assets/css/custom/category.css">
     </head>
     <body>
         <div class="wrapper">

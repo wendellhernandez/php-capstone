@@ -20,7 +20,7 @@
 <?php
     foreach($categories_table as $category){
 ?>
-                                        <option value="<?= $category['id'] ?>"><?= $category['name'] ?></option>
+                                        <option value="<?= $category['id'] ?>" <?= ($product['category_id'] == $category['id']) ? 'selected' : '' ?>><?= $category['name'] ?></option>
 <?php
     }
 ?>
@@ -37,7 +37,7 @@
 						            <div id="edit_inventory_error" class="validation_error"></div>
                                 </li>
                                 <li>
-                                    <label>Upload Images (5 Max)</label>
+                                    <label>Upload Images (4 Max)</label>
                                     <ul>
                                         <li>
                                             <button type="button" class="upload_image edit_image_button"></button>

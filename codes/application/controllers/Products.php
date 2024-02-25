@@ -10,16 +10,15 @@
             $this->load->view('products/category' , $data);
         }
 
-        public function is_logged_in(){
-			if(empty($this->session->userdata('user_id'))){
-				return false;
-			}else{
-				return true;
-			}
-		}
-
         public function category_partial(){
+            if(!empty($this->input->post('page' , TRUE))){
+                $page = $this->input->post('page' , TRUE);
+            }else{
+                $page = 1;
+            }
+
             $data = array(
+                'page' => $page,
 				'is_logged_in' => $this->is_logged_in(),
                 'products' => $this->Product->get_products(),
                 'categories' => $this->Product->get_categories(),
@@ -58,7 +57,14 @@
         }
 
         public function admin_products_partial(){
+            if(!empty($this->input->post('page' , TRUE))){
+                $page = $this->input->post('page' , TRUE);
+            }else{
+                $page = 1;
+            }
+
             $data = array(
+                'page' => $page,
                 'products' => $this->Product->get_products(),
                 'categories' => $this->Product->get_categories(),
                 'categories_table' => $this->Product->get_categories_table(),
@@ -78,7 +84,14 @@
         public function delete_product($product_id){
             $this->Product->remove_product($product_id);
 
+            if(!empty($this->input->post('page' , TRUE))){
+                $page = $this->input->post('page' , TRUE);
+            }else{
+                $page = 1;
+            }
+
             $data = array(
+                'page' => $page,
                 'products' => $this->Product->get_products(),
                 'categories' => $this->Product->get_categories(),
                 'categories_table' => $this->Product->get_categories_table(),
@@ -112,4 +125,16 @@
         public function add_category(){
             $this->Product->set_category();
         }
+
+        public function delete_category($category_id){
+            $this->Product->remove_category($category_id);
+        }
+
+        public function is_logged_in(){
+			if(empty($this->session->userdata('user_id'))){
+				return false;
+			}else{
+				return true;
+			}
+		}
     }
