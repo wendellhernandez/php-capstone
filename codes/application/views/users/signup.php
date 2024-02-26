@@ -39,7 +39,7 @@
 						<div id="last_name" class="validation_error"></div>
 					</li>
 					<li>
-						<input type="email" name="email">
+						<input type="text" name="email">
 						<label>Email</label>
 						<div id="email" class="validation_error"></div>
 					</li>
